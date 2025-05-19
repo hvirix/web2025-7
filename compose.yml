@@ -1,0 +1,7 @@
+services:
+  myapp:
+    build: .
+    container_name: halabuda
+    ports:
+      - "3000:3000"
+    command: ["node", "index.js", "--host", "0.0.0.0", "--port", "3000"]
