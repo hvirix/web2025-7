@@ -1,7 +1,27 @@
 services:
-  myapp:
+  server:
     build: .
     container_name: halabuda
+    depends_on:
+      - db
+    env_file: .env
     ports:
-      - "3000:3000"
-    command: ["node", "index.js", "--host", "0.0.0.0", "--port", "3000"]
+      - "${NODE_DOCKER_PORT}:3000"
+
+  db:
+    image: postgres:17
+    restart: always
+    env_file: ./.env
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    expose:
+      - $DB_PORT
+
+volumes:
+  db-data:

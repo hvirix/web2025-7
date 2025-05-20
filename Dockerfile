@@ -8,4 +8,4 @@ RUN npm install
 
 COPY . .
 
-CMD ["node", "index.js"]
+CMD npx nodemon index.js --host localhost --port 3000
