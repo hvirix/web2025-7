@@ -94,7 +94,7 @@ app.get("/devices/:serial_number", async (req, res) => {
     const serial_number = req.params.serial_number;
 
     const data = await db.oneOrNone(
-        'SELECT device_name, user_name FROM devices WHERE serial_number = $1',
+        'SELECT user_name, device_name FROM devices WHERE serial_number = $1',
         [serial_number]
     );
 
