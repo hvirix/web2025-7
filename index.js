@@ -105,7 +105,32 @@ app.get("/devices/:serial_number", async (req, res) => {
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).json(data);
-})
+});
+
+app.patch("/return", async (req, res) => {
+    const serial_number = req.body.serial_number;
+
+    const data = await db.oneOrNone(
+        'select user_name from devices where serial_number = $1',
+        [serial_number]
+    );
+
+    if(!data){
+        res.sendStatus(404);
+        return;
+    }
+
+    if(data.user_name === null) {
+        res.sendStatus(400);
+        return;
+    }
+
+    db.none(
+        'update devices set user_name = null where serial_number = $1',
+        [serial_number]
+    );
+    res.sendStatus(200);
+});
 
 
 app.listen(options.port, options.host, () => {
